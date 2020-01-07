@@ -1,0 +1,208 @@
+***********************************************************************
+*
+*  Copyright (c) 2020 NuWave Technologies, Inc. All rights reserved.
+*
+************************************************************************
+*?env common
+ IDENTIFICATION DIVISION.
+ PROGRAM-ID. SERVCOB.
+ ENVIRONMENT DIVISION.
+ CONFIGURATION SECTION.
+ SOURCE-COMPUTER.  T16.
+ OBJECT-COMPUTER.  T16.
+ INPUT-OUTPUT SECTION.
+ FILE-CONTROL.
+
+ SELECT RECV-MSG
+    ASSIGN TO $RECEIVE.
+
+ RECEIVE-CONTROL.
+    TABLE OCCURS 5 TIMES
+    SYNCDEPTH IS 2
+    REPLY CONTAINS RECV-MSG RECORD.
+ 
+ DATA DIVISION.
+ FILE SECTION.
+
+    FD  RECV-MSG
+        RECORD IS VARYING IN SIZE
+        DEPENDING ON RECV-MSG-LEN.
+
+
+   COPY LW-ML-MSG-LOG-RQ  IN LWMLCOPY.
+   COPY LW-ML-MSG-LOG-RP  IN LWMLCOPY.
+
+   01 RECV-MSG-BUFFER.
+      05 RECV-MSG-BYTES   PIC X(1) OCCURS 32000.
+
+
+ WORKING-STORAGE SECTION.
+
+    01  SET-SWITCH      PIC 9 VALUE 1.
+    01  CLEAR-SWITCH    PIC 9 VALUE 0.
+    01  EOF-SWITCH      PIC 9 VALUE 0.
+        88  EOF         VALUE 1.
+
+    01  FILE-STATUS     PIC XX.
+    01  RECV-MSG-LEN PIC 9(5) COMP.
+    01  STRING-OFFSET   PIC 9(5) COMP.
+    01  STRING-VALUE    PIC X(256).
+    01  IDX             PIC 9(5) COMP.
+    01  NV-COUNT        PIC 9(5) COMP.
+    01  NV-OFFSET       PIC 9(5) COMP.
+    01  NV-PAIRS.
+        05 NV-PAIR      OCCURS 50 TIMES.
+          10 NAME       PIC X(32).
+          10 VAL        PIC X(32).
+    01 WS-ARRAY.
+        05 BYTE         OCCURS 2048 TIMES PIC X(1).
+/
+ PROCEDURE DIVISION.
+ MAIN SECTION.
+
+    OPEN I-O RECV-MSG SHARED SYNCDEPTH 1
+
+    PERFORM RECEIVE-LOOP THRU RECEIVE-LOOP-EXIT
+        UNTIL EOF.
+
+    CLOSE RECV-MSG.
+
+    STOP RUN.
+
+ RECEIVE-LOOP.
+
+    READ RECV-MSG
+        AT END
+            MOVE SET-SWITCH TO EOF-SWITCH
+            GO TO RECEIVE-LOOP-EXIT.
+
+    IF LW-ML-RQ-MSG-LOG OF HEADER OF LW-ML-MSG-LOG-RQ
+        PERFORM LOG-REQUEST THRU LOG-REQUEST-EXIT
+        GO TO RECEIVE-LOOP-EXIT.
+
+    SET LW-ML-RP-ERROR OF HEADER OF LW-ML-MSG-LOG-RP TO TRUE.
+    WRITE LW-ML-MSG-LOG-RP.
+
+ RECEIVE-LOOP-EXIT.
+    EXIT.
+
+ LOG-REQUEST.
+
+    DISPLAY "SERVCOB $RECEIVE message: ", RECV-MSG-LEN.
+
+    DISPLAY "  code                    ", RQ-CODE.
+    DISPLAY "  version                 ", RQ-VERSION.
+    DISPLAY "  len                     ", RQ-LEN.
+    DISPLAY "  timestamp-unique        ", RQ-TS-UNIQUE(1).
+    DISPLAY "                          ", RQ-TS-UNIQUE(2).
+
+    DISPLAY "  start-time              ", START-TIME.
+    DISPLAY "  end-time                ", END-TIME.
+
+    DISPLAY "  rq-ipm-offset           ", RQ-IPM-OFFSET.
+    DISPLAY "  rq-ipm-len              ", RQ-IPM-LEN.
+
+    DISPLAY "  rq-request-line-offset  ", RQ-REQUEST-LINE-OFFSET.
+    DISPLAY "  rq-request-line-len     ", RQ-REQUEST-LINE-LEN.
+    MOVE RQ-REQUEST-LINE-OFFSET TO STRING-OFFSET.
+    PERFORM GET-STRING THRU GET-STRING-EXIT.
+    DISPLAY "  rq-request-line         ", STRING-VALUE.
+
+    DISPLAY "  rq-headers-offset       ", RQ-HEADERS-OFFSET.
+    DISPLAY "  rq-headers-len          ", RQ-HEADERS-LEN.
+    DISPLAY "  rq-headers-count        ", RQ-HEADERS-COUNT.
+    MOVE RQ-HEADERS-OFFSET TO NV-OFFSET.
+    MOVE RQ-HEADERS-COUNT TO NV-COUNT.
+    PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
+    PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
+
+    DISPLAY "  rq-payload-offset       ", RQ-PAYLOAD-OFFSET.
+    DISPLAY "  rq-payload-len          ", RQ-PAYLOAD-LEN.
+
+    DISPLAY "  rp-ipm-offset           ", RP-IPM-OFFSET.
+    DISPLAY "  rp-ipm-len              ", RP-IPM-LEN.
+
+    DISPLAY "  rp-status               ", RP-STATUS.
+    DISPLAY "  rp-status-line-offset   ", RP-STATUS-LINE-OFFSET.
+    DISPLAY "  rp-status-line-len      ", RP-STATUS-LINE-LEN.
+    MOVE RP-STATUS-LINE-OFFSET TO STRING-OFFSET.
+    PERFORM GET-STRING THRU GET-STRING-EXIT.
+    DISPLAY "  rp-status-line          ", STRING-VALUE.
+
+    DISPLAY "  rp-headers-offset       ", RP-HEADERS-OFFSET.
+    DISPLAY "  rp-headers-len          ", RP-HEADERS-LEN.
+    DISPLAY "  rp-headers-count        ", RP-HEADERS-COUNT.
+    MOVE RP-HEADERS-OFFSET TO NV-OFFSET.
+    MOVE RP-HEADERS-COUNT TO NV-COUNT.
+    PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
+    PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
+
+    DISPLAY "  rp-payload-offset       ", RP-PAYLOAD-OFFSET.
+    DISPLAY "  rp-payload-len          ", RP-PAYLOAD-LEN.
+
+    DISPLAY "  user-data-offset        ", USER-DATA-OFFSET.
+    DISPLAY "  user-data-len           ", USER-DATA-LEN.
+    DISPLAY "  user-data-count         ", USER-DATA-COUNT.
+    MOVE USER-DATA-OFFSET TO NV-OFFSET.
+    MOVE USER-DATA-COUNT TO NV-COUNT.
+    PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
+    PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
+
+    DISPLAY "  metadata-offset         ", METADATA-OFFSET.
+    DISPLAY "  metadata-len            ", METADATA-LEN.
+    DISPLAY "  metadata-count          ", METADATA-COUNT.
+    MOVE METADATA-OFFSET TO NV-OFFSET.
+    MOVE METADATA-COUNT TO NV-COUNT.
+    PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
+    PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
+
+    DISPLAY "end of request".
+
+    SET LW-ML-RP-SUCCESS OF LW-ML-MSG-LOG-RP TO TRUE.
+    WRITE LW-ML-MSG-LOG-RP.
+
+ LOG-REQUEST-EXIT.
+    EXIT.
+
+ GET-STRING.
+* Add 1 to the offset. The map offsets are 0 based.
+    ADD 1 TO STRING-OFFSET.
+    UNSTRING RECV-MSG-BUFFER
+      DELIMITED BY X"00"
+      INTO STRING-VALUE
+      WITH POINTER STRING-OFFSET.
+ GET-STRING-EXIT.
+    EXIT.
+
+ GET-NV-PAIRS.
+* Add 1 to the offset. The map offsets are 0 based.
+    ADD 1 TO NV-OFFSET.
+    PERFORM GET-NV THRU GET-NV-EXIT
+      VARYING IDX FROM 1 BY 1
+      UNTIL IDX > NV-COUNT.
+ GET-NV-PAIRS-EXIT.
+    EXIT.
+
+ GET-NV.
+    UNSTRING RECV-MSG-BUFFER
+      DELIMITED BY X"00"
+      INTO NAME OF NV-PAIR (IDX)
+      WITH POINTER NV-OFFSET.
+    UNSTRING RECV-MSG-BUFFER
+      DELIMITED BY X"00"
+      INTO VAL OF NV-PAIR (IDX)
+      WITH POINTER NV-OFFSET.
+ GET-NV-EXIT.
+    EXIT.
+
+ DISPLAY-NV-PAIRS.
+    PERFORM DISPLAY-NV THRU DISPLAY-NV-EXIT
+      VARYING IDX FROM 1 BY 1
+      UNTIL IDX > NV-COUNT.
+ DISPLAY-NV-PAIRS-EXIT.
+    EXIT.
+
+ DISPLAY-NV.
+    DISPLAY "    ", NAME OF NV-PAIR (IDX), " : " VAL OF NV-PAIR (IDX).
+ DISPLAY-NV-EXIT.
+    EXIT.

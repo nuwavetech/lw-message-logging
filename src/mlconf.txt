@@ -1,0 +1,14 @@
+[msg-log:collector-c]
+enabled=1
+target=serverclass:$lwml:collector-c
+content-filter=*
+#reply-code-filter=0
+#http-status-filter=200
+
+[msg-log:collector-cob]
+enabled=0
+target=serverclass:$lwml:collector-cob
+content-filter=*
+#reply-code-filter=0
+#http-status-filter=200
+      

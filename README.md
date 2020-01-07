@@ -83,11 +83,11 @@ SERVC $RECEIVE message:   5248
   rq-ipm-len              2048
   rq-request-line-offset  841
   rq-request-line-len     40
-  rq-request-line         POST /echo/numeric/deserialize HTTP/1.1
+  rq-request-line         POST /test-endpoint HTTP/1.1
   rq-headers-offset       916
   rq-headers-len          184
   rq-headers-count        6
-        user-agent : LightWave Client 1.2.0-alpha.1 (UNSUPPORTED SOFTWARE)
+        user-agent : LightWave Client 1.2.0
         content-type : application/json
         accept : */*
         content-length : 496

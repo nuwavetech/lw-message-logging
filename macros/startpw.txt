@@ -17,13 +17,6 @@
   #return  
 ]         
 
-#push rc, class, attribute, tcpip^process
-#setmany rc class attribute tcpip^process, [#defineinfo =tcpip^process^name] 
-
-[#if [#EMPTYV tcpip^process] |then|
-  #set tcpip^process $ZTC0
-]
-
 [#if [#processexists [pathmon^name] ] |then|
   #output Shutting down existing Pathmon [pathmon^name] ...
   pathcom [pathmon^name] ; shutdown2

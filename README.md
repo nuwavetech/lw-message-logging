@@ -1,18 +1,22 @@
 # LightWave Message Logging Sample
-This LightWave sample illustrates how to create a Message Logging collector for use with LightWave Client or Server. The sample servers decompose the Message Logging request and write it to the console.
+This LightWave sample illustrates how to create a Message Logging collector for use with the LightWave Client or LightWave Server Message Logging feature. The sample servers decompose the Message Logging request and write it to the console. The samples may be used as a basis for developing custom Message Logging collectors.
+
+*Note: The Message Logging feature is currently in the alpha release stage and is not supported for production use.*
  
 ## Prerequisites
 
 + NonStop C Compiler, if building the C sample.
 + NonStop COBOL Compiler, if building the COBOL sample.
-+ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT) version 1.2.0 or greater.
++ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-alpha.1 or greater, or
++ An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-alpha.1 or greater.
 
-The following values must be configured in the SETUP TACL macro after installation of the sample:
 
-+ lwc-isv - The installation subvolume of your LightWave Client software.
+The following values must be configured in the SETENV TACL macro after UNPAKing the sample files:
+
++ lwmlddl-isv - The location of the Message Logging DDL. This is typically the installation subvolume of your LightWave Client or LightWave Server software. 
 + pathmon-name - The Message Logging collector Pathmon name.
 
-The value specified for the pathmon-name must also be configured in the MLCONF file, if the default is changed. In addition, the MLCONF file is configured with the C collector enabled and the COBOL collector disabled. Enable the COBOL collector if desired.
+The value specified for the pathmon-name must also be configured in the MLCONF file, if the default is changed. In addition, the MLCONF file is configured with the C collector enabled and the COBOL collector disabled. Enable the COBOL collector if desired. Note that if both the C and COBOL collectors are enabled, the output from both collectors will likely be interleaved. It's best to only enable one collector at a time.
 
 ## Install & Build
 
@@ -26,7 +30,7 @@ In addition, a PAK archive containing all of the source files is available for t
 | macros/startpw.txt | startpw |
 | macros/stoppw.txt | stoppw |
 | macros/unsetenv.txt | unsetenv |
-| src/mlconf.txt | mlsconf |
+| src/mlconf.txt | mlconf |
 | src/servc.c | servcc |
 | src/servcobs.txt | servcobs |
 | mlpak.bin | mlpak |
@@ -43,7 +47,11 @@ Logon to TACL on your NonStop system to peform the installation and build steps.
 ```
 TACL > UNPAK MLPAK ($*.*.*), VOL $vol.subvol, LISTALL, MYID
 ```
-
+#### Customize and run the SETENV macro
+````
+TACL > T/EDIT SETENV
+TACL > RUN SETENV
+````
 #### Build the sample servers
 ```
 TACL > RUN BUILD
@@ -60,13 +68,27 @@ TACL > RUN STARTPW
 ```
 
 ## Configuring the LightWave process
-Configure the LightWave Client or Server process to use Message Logging by adding the following options to the CLIENT or SERVER process configuration.
-```
---msg-log +$vol.subvol.MLCONF [ --monitor msg-log ]
-````
-Restart the CLIENT or SERVER process.
+Configure the LightWave Client or LightWave Server process to enable the Message Logging feature by adding the *--msg-log* option to the SERVER process configuration or CLIENT process or serverclass configuration:
 
-Note that the sample collector processes writes the request information to the serverclass OUT file. The STARTPW macro sets OUT to #MYTERM and pauses the terminal to allow the output to be written to the console.
+#### LightWave Server
+````
+TACL > RUN SERVER --msg-log +$vol.subvol.MLCONF ...
+````
+*In future releases of LightWave Server, Message Logging will be configured using the Console or LWSCOM utility. Message Logging configuration file monitoring is not currently supported in LightWave Server.*
+
+#### LightWave Client
+````
+TACL RUN CLIENT --msg-log +$vol.subvol.MLCONF [ --monitor msg-log ] ...
+
+or
+
+SET SERVER PARAM MSG-LOG "+$vol.subvol.MLCONF"
+SET SERVER PARAM MONITOR "msg-log"
+````
+
+#### Restart the CLIENT or SERVER process.
+
+Note that the sample collectors write the request information to the serverclass OUT file. The STARTPW macro sets OUT to #MYTERM and pauses the terminal to allow the output to be written to the console.
 
 Each time a request is processed by the CLIENT or SERVER/SWORKER process, the collector process will output the contents of the Message Logging request:
 
@@ -141,6 +163,5 @@ SERVC $RECEIVE message:   5248
         tls-version : TLSv1.3
 end of request
 ```
-Note that if both the C and COBOL collectors are enabled, the output from both collectors will likely be interleaved. It is best to only enable one collector at a time.
 
 Assistance is available through the [NuWave Technologies Support Center](http://support.nuwavetech.com).

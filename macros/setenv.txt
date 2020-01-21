@@ -2,7 +2,7 @@
 
 == Set runtime environment. Customize this for your environment.
  
-#set #param lws-isv             [#defaults/current/]
+#set #param lwmlddl-isv         [#defaults/current/]
 #set #param pathmon-name        $lwml
 
  

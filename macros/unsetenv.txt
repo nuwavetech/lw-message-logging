@@ -2,6 +2,7 @@
 
 == Clear params set by SETENV.
 
-clear param lwc-isv          
+clear param lwmlddl-isv          
+clear param pathmon-name
 
 

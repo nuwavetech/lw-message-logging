@@ -11,7 +11,7 @@ sink [#purge ddlout]
 ddl2 / inline, out ddlout /
 inlprefix +
 + ?dict !
-+ ?source [#param lwc-isv].lwmlddl
++ ?source [#param lwmlddl-isv].lwmlddl
 inleof
 
 [#if [ :_completion:completioncode ] <> 0 |then|

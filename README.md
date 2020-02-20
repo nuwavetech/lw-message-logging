@@ -9,11 +9,12 @@ This LightWave sample illustrates how to create a Message Logging collector for 
 + NonStop COBOL Compiler, if building the COBOL sample.
 + An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-alpha.1 or greater, or
 + An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-alpha.1 or greater.
++ The Message Logging DDL file LWMLDDL. This file is included in the LightWave Client and LightWave Server installation PAK file. 
 
 
 The following values must be configured in the SETENV TACL macro after UNPAKing the sample files:
 
-+ lwmlddl-isv - The location of the Message Logging DDL. This is typically the installation subvolume of your LightWave Client or LightWave Server software. 
++ lwmlddl-isv - The subvolume containing the Message Logging DDL file LWMLDDL. This is typically the installation subvolume of your LightWave Client or LightWave Server software. 
 + pathmon-name - The Message Logging collector Pathmon name.
 
 The value specified for the pathmon-name must also be configured in the MLCONF file, if the default is changed. In addition, the MLCONF file is configured with the C collector enabled and the COBOL collector disabled. Enable the COBOL collector if desired. Note that if both the C and COBOL collectors are enabled, the output from both collectors will likely be interleaved. It's best to only enable one collector at a time.

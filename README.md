@@ -7,10 +7,10 @@ This LightWave sample illustrates how to create a Message Logging collector for 
 
 + NonStop C Compiler, if building the C sample.
 + NonStop COBOL Compiler, if building the COBOL sample.
-+ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-alpha.1 or greater, or
-+ An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-alpha.1 or greater.
++ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-alpha.2 or greater, or
++ An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-alpha.2 or greater.
 + The Message Logging DDL file LWMLDDL. This file is included in the LightWave Client and LightWave Server installation PAK file. 
-
+ 
 
 The following values must be configured in the SETENV TACL macro after UNPAKing the sample files:
 

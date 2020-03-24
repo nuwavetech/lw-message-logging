@@ -84,7 +84,7 @@ int main(int argc, char** argv, char** env) {
     }
 
     /* Read the request. It may arrive in a single I/O completion or as
-    a stream in sequencial I/O completions withing a Pathway dialog. */
+    a stream in sequential I/O completions withing a Pathway dialog. */
     if (!streaming) {
       request = (lw_ml_msg_log_rq_def*)recvBuffer;
       /* If the request is larger than the countRead, then setup the request

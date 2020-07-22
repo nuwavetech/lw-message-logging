@@ -7,8 +7,8 @@ This LightWave sample illustrates how to create a Message Logging collector for 
 
 + NonStop C Compiler, if building the C sample.
 + NonStop COBOL Compiler, if building the COBOL sample.
-+ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-alpha.2 or greater, or
-+ An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-alpha.2 or greater.
++ An installed instance of [LightWave Client](https://docs.nuwavetech.com/display/LWCLIENT120) version 1.2.0-beta.1 or greater, or
++ An installed instance of [LightWave Server](https://docs.nuwavetech.com/display/LWCLIENT110) version 1.1.0-beta.1 or greater.
 + The Message Logging DDL file LWMLDDL. This file is included in the LightWave Client and LightWave Server installation PAK file. 
  
 
@@ -93,73 +93,109 @@ Note that the sample collectors write the request information to the serverclass
 
 Each time a request is processed by the CLIENT or SERVER/SWORKER process, the collector process will output the contents of the Message Logging request:
 
-```
-SERVC $RECEIVE message:   5248
+``` 
+SERVC log message received:   2796
   code                    1
   version                 1
-  len                     5248
-  id                      212445188021197443
-                          1595503071002624
-  rq-start-time           212445188021145983
-  rq-end-time             212445188021197425
-  rq-ipm-offset           1952
-  rq-ipm-len              2048
-  rq-request-line-offset  841
-  rq-request-line-len     40
-  rq-request-line         POST /test-endpoint HTTP/1.1
-  rq-headers-offset       916
-  rq-headers-len          184
-  rq-headers-count        6
-        user-agent : LightWave Client 1.2.0
-        content-type : application/json
-        accept : */*
-        content-length : 496
+  len                     2796
+  id                      212462209304290976
+                          21670558706499584
+  rq-start-time           212462209304171542
+  rq-end-time             212462209304290973
+  rq-total-time           119431
+  rq-connect-time         0
+  rq-connect-hs-time      107689
+  rq-request-time         1860
+  rq-response_time        22
+  rq-serialize-time       22
+  rq-deserialize-time     37
+  rq-server-io            0
+  rq-ipm-offset           2160
+  rq-ipm-len              258
+  rq-request-line-offset  981
+  rq-request-line-len     41
+  rq-request-line         POST /test/v1/simpleEcho HTTP/1.1
+  rq-method-off           1022
+  rq-method-len           5
+  rq-method               POST
+  rq-uri-off              1027
+  rq-uri-len              27
+  rq-uri                  /test/v1/simpleEcho
+  rq-params-offset        0
+  rq-params-len           0
+  rq-params-count         0
+  rq-request-http-ver-off 1054
+  rq-request-http-ver-len 4
+  rq-request-http-ver     1.1
+  rq-headers-offset       1058
+  rq-headers-len          789
+  rq-headers-count        14
+        host : nsx.nuwavetech.com:19099
         connection : keep-alive
-        host : test.example.com
-  rq-payload-offset       4000
-  rq-payload-len          496
-  rp-ipm-offset           4496
-  rp-ipm-len              256
-  rp-status               200
-  rp-status-line-offset   1100
-  rp-status-line-len      14
-  rp-status-line          HTTP/1.1 200
-  rp-headers-offset       1114
-  rp-headers-len          824
-  rp-headers-count        7
-        date : Tue, 07 Jan 2020 20:13:41 GMT
-        server : Apache/2.4.41 (Ubuntu)
-        strict-transport-security : max-age=15768000
+        content-length : 44
+        accept : application/json, text/plain, */*
+        user-agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/53
+7.36
         content-type : application/json
-        content-length : 496
-        keep-alive : timeout=5, max=99
+        origin : https://nsx.nuwavetech.com:19098
+        sec-fetch-site : same-site
+        sec-fetch-mode : cors
+        sec-fetch-dest : empty
+        referer : https://nsx.nuwavetech.com:19098/console/
+        accept-encoding : gzip, deflate, br
+        accept-language : en-US,en;q=0.9
+        cookie : XSRF-TOKEN-da1d869d692dd256=da1d869d692dd256f30d04768c9e7f1de6e2457aa28c29cf0b76151a2633bfa9; XSRF-TOKEN-7c2fd7ff3d
+185c02=7c2fd7ff3d185c022d50af3ae1b20d2d87244593c4a252fcb3876e19041fb8b3; XSRF-TOKEN-a061a6cbae41d860=a061a6cbae41d860b3819945283d529
+097474de140e13e72012bc95bf0bfd6b9
+  rq-body-offset          2432
+  rq-body-len             44
+  rp-ipm-offset           2480
+  rp-ipm-len              258
+  rp-status               200
+  rp-status-line-offset   1847
+  rp-status-line-len      16
+  rp-status-line          HTTP/1.1 200 OK
+  rp-headers-offset       1863
+  rp-headers-len          287
+  rp-headers-count        8
+        date : Wed, 22 Jul 2020 20:21:44 GMT
+        access-control-allow-origin : https://nsx.nuwavetech.com:19098
+        access-control-allow-credentials : true
+        content-length : 44
+        cache-control : no-cache,no-store,must-revalidate
+        content-type : application/json
+        keep-alive : timeout=30, max=100
         connection : Keep-Alive
-  rp-payload-offset       4752
-  rp-payload-len          496
+  rp-body-offset          2752
+  rp-body-len             44
   user-data-offset        0
   user-data-len           0
   user-data-count         0
   metadata-offset         224
-  metadata-len            617
-  metadata-count          20
-        config-name : COLLECTOR-C
-        config-enabled : 1
-        config-target : serverclass:$lwml
-        config-content-filter : *
-        api-base-url : https://test.example.com
-        api-file-name : \NODE.$VOL.SUBVOL.API
+  metadata-len            757
+  metadata-count          24
+        config-collector-name : collector-c
+        config-collector-enabled : true
+        config-collector-type : serverclass
+        config-collector-pathmon : \NODE.$LWML
+        config-collector-serverclass : COLLECTOR-C
+        config-collector-content : all
+        config-filter-name : successfull-request
         api-method : POST
-        api-name : test-api
-        api-path : /test-endpoint
-        net-local-ip : 192.168.0.1
-        net-local-port : 13297
-        net-remote-ip : 192.168.0.2
-        net-remote-port : 443
-        net-process : \NODE.$ZTC0
-        process-ancestor-name : \NODE.$X0TF
-        process-ancestor-program : \NODE.$SYSTEM.SYSTEM.PATHMON
-        process-name : \NODE.$X15F
-        process-program : \NODE.$VOL.SUBVOL.CLIENT
+        api-name : com.nuwavetech.test.api
+        api-path : /test/v1/simpleEcho
+        api-process : \NODE.$TS00
+        api-serverclass : TESTSVR
+        api-alias : SimpleEchoRequest
+        net-local-ip : 172.17.198.13
+        net-local-port : 19099
+        net-remote-ip : 172.17.201.242
+        net-remote-port : 64218
+        net-process : $ZTC0
+        process-ancestor-name : \NODE.$Y9S0
+        process-ancestor-program : \NODE.$SYSTEM.SYS01.TACL
+        process-name : \NODE.$Y9X6
+        process-program : \NODE.$VOL.SUBVOL.SERVER
         tls-cipher : TLS_AES_256_GCM_SHA384
         tls-version : TLSv1.3
 end of request

@@ -2,7 +2,7 @@
  *
  *  Copyright (c) 2020 NuWave Technologies, Inc. All rights reserved.
  *
- */  
+ */
 #pragma nolist
 
 #include <stdio.h>
@@ -139,8 +139,8 @@ int main(int argc, char** argv, char** env) {
     }
 
     /* Dump the request. */
-    base = (char*)request;  
- 
+    base = (char*)request;
+
     printf("  code                    %hd\n", request->header.rq_code);
     printf("  version                 %hd\n", request->header.rq_version);
     printf("  len                     %u\n", request->header.rq_len);
@@ -166,19 +166,15 @@ int main(int argc, char** argv, char** env) {
     printf("  rq-request-line-len     %u\n", request->map.rq_request_line_len);
     printf("  rq-request-line         %s\n",
            &base[request->map.rq_request_line_offset]);
+  
+    printf("  rq-method-off           %u\n", request->map.rq_method_offset);
+    printf("  rq-method-len           %u\n", request->map.rq_method_len);
+    printf("  rq-method               %s\n",
+           &base[request->map.rq_method_offset]);
 
-    printf("  rq-request-method-off   %u\n",
-           request->map.rq_request_method_offset);
-    printf("  rq-request-method-len   %u\n",
-           request->map.rq_request_method_len);
-    printf("  rq-request-method       %s\n",
-           &base[request->map.rq_request_method_offset]);
-
-    printf("  rq-request-uri-off      %u\n",
-           request->map.rq_request_uri_offset);
-    printf("  rq-request-uri-len      %u\n", request->map.rq_request_uri_len);
-    printf("  rq-request-uri          %s\n",
-           &base[request->map.rq_request_uri_offset]);
+    printf("  rq-uri-off              %u\n", request->map.rq_uri_offset);
+    printf("  rq-uri-len              %u\n", request->map.rq_uri_len);
+    printf("  rq-uri                  %s\n", &base[request->map.rq_uri_offset]);
 
     printf("  rq-params-offset        %u\n", request->map.rq_params_offset);
     printf("  rq-params-len           %u\n", request->map.rq_params_len);
@@ -197,8 +193,8 @@ int main(int argc, char** argv, char** env) {
     printNameValuePairs(base, request->map.rq_headers_offset,
                         request->map.rq_headers_count);
 
-    printf("  rq-payload-offset       %u\n", request->map.rq_payload_offset);
-    printf("  rq-payload-len          %u\n", request->map.rq_payload_len);
+    printf("  rq-body-offset          %u\n", request->map.rq_body_offset);
+    printf("  rq-body-len             %u\n", request->map.rq_body_len);
 
     printf("  rp-ipm-offset           %u\n", request->map.rp_ipm_offset);
     printf("  rp-ipm-len              %u\n", request->map.rp_ipm_len);
@@ -216,8 +212,8 @@ int main(int argc, char** argv, char** env) {
     printNameValuePairs(base, request->map.rp_headers_offset,
                         request->map.rp_headers_count);
 
-    printf("  rp-payload-offset       %u\n", request->map.rp_payload_offset);
-    printf("  rp-payload-len          %u\n", request->map.rp_payload_len);
+    printf("  rp-body-offset          %u\n", request->map.rp_body_offset);
+    printf("  rp-body-len             %u\n", request->map.rp_body_len);
 
     printf("  user-data-offset        %u\n", request->map.user_data_offset);
     printf("  user-data-len           %u\n", request->map.user_data_len);
@@ -243,8 +239,8 @@ int main(int argc, char** argv, char** env) {
   FILE_CLOSE_(recvFilenum);
   free(recvBuffer);
   return 0;
-}  
-    
+}
+
 void printNameValuePairs(const char* base, unsigned int offset,
                          unsigned int count) {
   const char* p;

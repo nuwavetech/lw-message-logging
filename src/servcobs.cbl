@@ -116,8 +116,8 @@
     PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
     PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
 
-    DISPLAY "  rq-payload-offset       ", RQ-PAYLOAD-OFFSET.
-    DISPLAY "  rq-payload-len          ", RQ-PAYLOAD-LEN.
+    DISPLAY "  rq-body-offset          ", RQ-BODY-OFFSET.
+    DISPLAY "  rq-body-len             ", RQ-BODY-LEN.
 
     DISPLAY "  rp-ipm-offset           ", RP-IPM-OFFSET.
     DISPLAY "  rp-ipm-len              ", RP-IPM-LEN.
@@ -137,8 +137,8 @@
     PERFORM GET-NV-PAIRS THRU GET-NV-PAIRS-EXIT.
     PERFORM DISPLAY-NV-PAIRS THRU DISPLAY-NV-PAIRS-EXIT.
 
-    DISPLAY "  rp-payload-offset       ", RP-PAYLOAD-OFFSET.
-    DISPLAY "  rp-payload-len          ", RP-PAYLOAD-LEN.
+    DISPLAY "  rp-body-offset          ", RP-BODY-OFFSET.
+    DISPLAY "  rp-body-len             ", RP-BODY-LEN.
 
     DISPLAY "  user-data-offset        ", USER-DATA-OFFSET.
     DISPLAY "  user-data-len           ", USER-DATA-LEN.

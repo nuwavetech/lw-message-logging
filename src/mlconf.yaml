@@ -1,0 +1,31 @@
+---  
+msg-log:
+  collectors:
+    collector-c:
+      enabled: true
+      type: serverclass
+      pathmon: $lwml
+      serverclass: collector-c
+      content: all
+    collector-cob:
+      enabled: true
+      type: serverclass
+      pathmon: $lwml
+      serverclass: collector-cob
+      content: all
+  filters:
+    successfull-request:
+      enabled: false
+      match-all:  
+        http-status: "200:299"
+        reply-code: "0"
+      collectors:
+        - collector-c
+        - collector-cob
+    catch-all: 
+      enabled: true
+      match-always: true
+      collectors:
+        - collector-c
+        - collector-cob
+...

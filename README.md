@@ -1,9 +1,13 @@
 # LightWave Message Logging Sample
 This LightWave sample illustrates how to create a Message Logging collector for use with the LightWave Client or LightWave Server Message Logging feature. The sample servers decompose the Message Logging request and write it to the console. The samples may be used as a basis for developing custom Message Logging collectors.
 
-*Note: The Message Logging feature is currently in the alpha release stage and is not supported for production use.*
- 
-## Prerequisites
+*Note: The Message Logging feature is currently in the pre-release stage and is not supported for production use.*
+
+## Feature Documentation
++ [LightWave Client - Message Logging](https://docs.nuwavetech.com/display/LWCLIENT120/Message+Logging)
++ [LightWave Server - Message Logging](https://docs.nuwavetech.com/display/LWSERVER110/Message+Logging)
+
+## Sample Prerequisites
 
 + NonStop C Compiler, if building the C sample.
 + NonStop COBOL Compiler, if building the COBOL sample.

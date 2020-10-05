@@ -1,31 +1,93 @@
 ---  
-msg-log:
+msg-log: 
   collectors:
     collector-c:
       enabled: true
       type: serverclass
       pathmon: $lwml
       serverclass: collector-c
-      content: all
-    collector-cob:
+      content: rq-http, rp-http
+    collector-cobol:
       enabled: true
       type: serverclass
       pathmon: $lwml
       serverclass: collector-cob
       content: all
   filters:
-    successfull-request:
-      enabled: false
+    # Note: Enclosing rule element values in double quotes
+    # is strongly recommended.
+    request-successful:
+      # Send to collector-c if HTTP status is 200-299
+      # AND IPM reply code is 0
+      enabled: true
       match-all:  
         http-status: "200:299"
-        reply-code: "0"
-      collectors:
-        - collector-c
-        - collector-cob
+        reply-code: 0
+      collectors: collector-c
+    request-failed:
+      # Send to collector-cobol if HTTP status
+      # is not 200-299 OR IPM reply code is not 0      
+      enabled: true  
+      match-any:  
+        http-status: "! 200:299"  
+        reply-code: "! 0"
+      collectors: collector-cobol
     catch-all: 
+      # Send any messages that didn't match previous filters
+      # to both collectors. (This is an illustration, maybe
+      # not such a good idea.)
       enabled: true
-      match-always: true
+      match-always: true      
       collectors:
         - collector-c
-        - collector-cob
+        - collector-cobol
+    # The following filters are examples and would not be
+    # evaluated in this configuration because they are
+    # positioned after the match-always catch-all rule.
+    # They are also marked as disabled.        
+    match-header:
+      # Match various headers
+      enabled: false
+      match-any:
+        rq-header:
+            content-type: "application/json"
+            # use false to match when header not present            
+            my-required-header: false
+            # use true to match when header is present with any value
+            my-optional-header: true
+        rp-header:
+            server: "Apache/*"
+      collectors: collector-c
+    match-get-employee-method:
+      # Match GET requests to the /employee service      
+      enabled: false
+      match-all:
+        method: "GET"
+        path: "/employee*"  
+      collectors: collector-c
+    match-get-update-fails:
+      # Match update requests to the /employee
+      # service that fail, when the employee ID
+      # begins with 5.
+      enabled: false
+      match-all:
+        method: "POST, PUT"
+        path: "regex:^/employee/[5].*$"  
+      match-any:
+        http-status: "!200"        
+        reply-code: "!0"
+      collectors: collector-c
+    match-poor-response:
+      # Match any GET request that exceeds 1 second.
+      enabled: false
+      match-all:
+        method: "GET"
+        total-time-exceeds: 1000000
+      collectors: collector-c
+    match-alias:
+      # Match when the operation alias begins with Get
+      enabled: false
+      match-all:
+        alias: "Get*"
+      collectors: collector-c
 ...
